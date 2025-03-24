@@ -61,20 +61,6 @@ interface InterviewCardProps {
   createdAt?: string;
 }
 
-interface AgentProps {
-  userName: string;
-  userId?: string;
-  interviewId?: string;
-  feedbackId?: string;
-  type: "generate" | "interview";
-  questions?: string[];
-}
-
-interface RouteParams {
-  params: Promise<Record<string, string>>;
-  searchParams: Promise<Record<string, string>>;
-}
-
 interface GetFeedbackByInterviewIdParams {
   interviewId: string;
   userId: string;
@@ -96,8 +82,6 @@ interface SignUpParams {
   email: string;
   password: string;
 }
-
-type FormType = "sign-in" | "sign-up";
 
 interface InterviewFormProps {
   interviewId: string;

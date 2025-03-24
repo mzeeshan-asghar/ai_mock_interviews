@@ -8,7 +8,7 @@ function HeroSection() {
       <div>
         <h2>Get Interview-Ready with AI-Powered Practice & Feedback</h2>
         <p>Practice real interview questions & get instant feedback.</p>
-        <Button>Start an Interview</Button>
+        <Button href="/interview">Start an Interview</Button>
       </div>
       <Image
         src="/robot.png"

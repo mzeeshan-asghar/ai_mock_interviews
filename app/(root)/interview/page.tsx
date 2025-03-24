@@ -1,8 +1,18 @@
 import React from "react";
-import InterviewSection from "@/components/AgentSection";
+import InterviewSection from "@/components/InterviewSection";
+import { getCurrentUser } from "@/lib/actions/auth";
 
-function page() {
-  return <InterviewSection title="Interview Generation" username="User" />;
+async function page() {
+  const currentUser = await getCurrentUser();
+
+  return (
+    <InterviewSection
+      title="Interview Generation"
+      username={currentUser?.name}
+      userId={currentUser?.id}
+      type="generate"
+    />
+  );
 }
 
 export default page;

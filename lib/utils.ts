@@ -46,6 +46,25 @@ export const getRandomInterviewCover = () => {
   return `/covers${interviewCovers[randomIndex]}`;
 };
 
-export const sendResponse = (success: boolean, message: string, data?: {}) => {
+export const sendServerResponse = <T>(
+  status: number,
+  message: string,
+  data?: T
+) => {
+  const success = status >= 200 && status < 300;
+
+  return Response.json({ success, message, data }, { status });
+};
+
+export const handleServerError = (message: string, error: any) => {
+  const [status, errorMsg] = [error?.status ?? 500, error?.message ?? message];
+  sendServerResponse(status, errorMsg);
+};
+
+export const sendResponse = <T>(
+  success: boolean,
+  message: string,
+  data?: T
+) => {
   return { success, message, data };
 };

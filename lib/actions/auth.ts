@@ -55,10 +55,7 @@ export const getCurrentUser = async () => {
     const user = await db.collection("users").doc(decodedToken.uid).get();
     if (!user.exists) return null;
 
-    return sendResponse(true, "User fetched successfully", {
-      ...user.data(),
-      id: user.id,
-    });
+    return { ...(user.data() as User), id: user.id };
   } catch (e: any) {
     console.error("Error getting current user:", e.message);
     return null;

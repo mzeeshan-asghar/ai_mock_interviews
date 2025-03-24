@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React from "react";
 import { Avatar } from "@/components/ui/avatar";
 import Logo from "./Logo";

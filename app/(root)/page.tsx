@@ -1,13 +1,13 @@
 import HeroSection from "@/components/HeroSection";
-import InterviewSection from "@/components/InterviewSection";
+import ShowcaseSection from "@/components/ShowcaseSection";
 import React from "react";
 
 function Home() {
   return (
     <>
       <HeroSection />
-      <InterviewSection title="Your Past Interviews" />
-      <InterviewSection title="Pick Your Interview" />
+      <ShowcaseSection title="Your Past Interviews" />
+      <ShowcaseSection title="Pick Your Interview" />
     </>
   );
 }
