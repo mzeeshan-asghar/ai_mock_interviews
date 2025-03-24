@@ -1,15 +1,21 @@
 "use client";
 
 import { signInSchema, signUpSchema, TSignUpSchema } from "@/schemas/form";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "@/components/ui/form";
+import { Form, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import CustomInput from "@/components/CustomInput";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "@/firebase/client";
+import { signUp, signIn } from "@/lib/actions/auth";
 
 export interface AuthFormProps {
   type: "sign-in" | "sign-up";
@@ -17,32 +23,58 @@ export interface AuthFormProps {
 
 function AuthForm({ type }: AuthFormProps) {
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const formSchema = type === "sign-in" ? signInSchema : signUpSchema;
+  const isSignUp = type === "sign-up";
+  const formSchema = isSignUp ? signUpSchema : signInSchema;
 
   const form = useForm<TSignUpSchema>({
     resolver: zodResolver(formSchema as any),
   });
 
-  function onSubmit(values: TSignUpSchema) {
+  const onSubmit = async (values: TSignUpSchema) => {
     try {
-      console.log(values);
+      setIsLoading(true);
+      const { name, email, password } = values;
+
+      const userCredential = isSignUp
+        ? await createUserWithEmailAndPassword(auth, email, password)
+        : await signInWithEmailAndPassword(auth, email, password);
+
+      const response = isSignUp
+        ? await signUp({
+            uid: userCredential.user.uid,
+            name,
+            email,
+            password,
+          })
+        : await signIn({
+            email,
+            idToken: await userCredential.user.getIdToken(),
+          });
+
+      if (!response.success) throw new Error(response.message);
+
       toast.success(
-        type === "sign-up"
-          ? "You've signed up successfully!"
+        isSignUp
+          ? "Account created successfully! Please sign in."
           : "You've signed in successfully!"
       );
-      router.push(type === "sign-up" ? "sign-in" : "/");
+      router.push(isSignUp ? "sign-in" : "/");
     } catch (error: any) {
       toast.error(error.message);
+      setErrorMessage(error.message);
+    } finally {
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 form">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-4">
-          {type === "sign-up" && (
+          {isSignUp && (
             <CustomInput
               name="name"
               label="Full name"
@@ -64,7 +96,7 @@ function AuthForm({ type }: AuthFormProps) {
             placeholder="Enter your password"
             control={form.control}
           />
-          {type === "sign-up" && (
+          {isSignUp && (
             <CustomInput
               name="avatar"
               type="file"
@@ -73,7 +105,7 @@ function AuthForm({ type }: AuthFormProps) {
               control={form.control}
             />
           )}
-          {type === "sign-up" && (
+          {isSignUp && (
             <CustomInput
               name="resume"
               type="file"
@@ -84,18 +116,18 @@ function AuthForm({ type }: AuthFormProps) {
           )}
         </div>
 
-        <Button type="submit" className="btn">
-          {type === "sign-in" ? "Sign in" : "Create an account"}
+        {errorMessage && <FormMessage>{errorMessage}</FormMessage>}
+
+        <Button type="submit" className="w-full" disabled={isLoading}>
+          {isSignUp ? "Create an account" : "Sign in"}
         </Button>
 
         <div className="flex-center gap-2">
           <p>
-            {type === "sign-in"
-              ? "Don't have an account?"
-              : "Already have an account?"}
+            {isSignUp ? "Already have an account?" : "Don't have an account?"}
           </p>
-          <Link href={`/${type === "sign-in" ? "sign-up" : "sign-in"}`}>
-            {type === "sign-in" ? "Sign up" : "Sign in"}
+          <Link href={`/${isSignUp ? "sign-in" : "sign-up"}`}>
+            {isSignUp ? "Sign in" : "Sign up"}
           </Link>
         </div>
       </form>

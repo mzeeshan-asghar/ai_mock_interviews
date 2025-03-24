@@ -1,12 +1,18 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { isUserAuth } from "@/lib/actions/auth";
+import { redirect } from "next/navigation";
 import React from "react";
 
-function layout({ children }: LayoutProps) {
+async function layout({ children }: LayoutProps) {
+  const isAuth = await isUserAuth();
+
+  if (!isAuth) redirect("/sign-in");
+
   return (
     <div className="root-layout">
       <Header />
-      <main className="space-y-6 min-h-screen">{children}</main>
+      <main>{children}</main>
       <Footer />
     </div>
   );

@@ -5,25 +5,6 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-success-100: #49de50;
-  --color-success-200: #42c748;
-  --color-destructive-100: #f75353;
-  --color-destructive-200: #c44141;
-
-  --color-primary-100: #dddfff;
-  --color-primary-200: #cac5fe;
-
-  --color-light-100: #d6e0ff;
-  --color-light-400: #6870a6;
-  --color-light-600: #4f557d;
-  --color-light-800: #24273a;
-
-  --color-dark-100: #020408;
-  --color-dark-200: #27282f;
-  --color-dark-300: #242633;
-
-  --bg-pattern: url("/pattern.png");
-
   --font-primary: var(--font-primary);
 }
 
@@ -74,7 +55,7 @@
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
-  --muted-foreground: var(--light-100);
+  --muted-foreground: oklch(0.708 0 0);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
@@ -132,6 +113,17 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 @layer base {
@@ -142,7 +134,7 @@
     @apply bg-background text-foreground font-primary;
   }
   p {
-    @apply text-light-100;
+    @apply text-muted-foreground;
   }
   h2 {
     @apply text-3xl font-semibold;
@@ -150,148 +142,146 @@
   h3 {
     @apply text-2xl font-semibold;
   }
-  ul {
-    @apply list-disc list-inside;
-  }
   li {
-    @apply text-light-100;
+    @apply text-muted-foreground;
+  }
+  button {
+    @apply cursor-pointer;
   }
 }
 
 @layer components {
-  .btn-call {
-    @apply inline-block px-7 py-3 font-bold text-sm leading-5 text-white transition-colors duration-150 bg-success-100 border border-transparent rounded-full shadow-sm focus:outline-none focus:shadow-2xl active:bg-success-200 hover:bg-success-200 min-w-28 cursor-pointer items-center justify-center overflow-visible;
+  .auth-layout {
+    @apply flex items-center justify-center mx-auto max-w-7xl min-h-screen max-sm:px-4 max-sm:py-8;
 
-    .span {
-      @apply bg-success-100 h-[85%] w-[65%];
-    }
-  }
+    & > div {
+      @apply lg:min-w-[566px];
 
-  .btn-disconnect {
-    @apply inline-block px-7 py-3 text-sm font-bold leading-5 text-white transition-colors duration-150 bg-destructive-100 border border-transparent rounded-full shadow-sm focus:outline-none focus:shadow-2xl active:bg-destructive-200 hover:bg-destructive-200 min-w-28;
-  }
+      & > div {
+        @apply space-y-6 card py-14 px-10;
 
-  .btn-upload {
-    @apply flex min-h-14 w-full items-center justify-center gap-1.5 rounded-md;
-  }
-  .btn-primary {
-    @apply w-fit !bg-primary-200 !text-dark-100 hover:!bg-primary-200/80 !rounded-full !font-bold px-5 cursor-pointer min-h-10;
-  }
-  .btn-secondary {
-    @apply w-fit !bg-dark-200 !text-primary-200 hover:!bg-dark-200/80 !rounded-full !font-bold px-5 cursor-pointer min-h-10;
-  }
-
-  .btn-upload {
-    @apply bg-dark-200 rounded-full min-h-12 px-5 cursor-pointer border border-input  overflow-hidden;
-  }
-
-  .card-border {
-    @apply border-gradient p-0.5 rounded-2xl w-fit;
-  }
-
-  .card {
-    @apply dark-gradient rounded-2xl min-h-full;
-  }
-
-  .form {
-    @apply w-full;
-
-    .label {
-      @apply !text-light-100 !font-normal;
-    }
-
-    .input {
-      @apply !bg-dark-200 !rounded-full !min-h-12 !px-5 placeholder:!text-light-100;
-    }
-
-    .btn {
-      @apply !w-full !bg-primary-200 !text-dark-100 hover:!bg-primary-200/80 !rounded-full !min-h-10 !font-bold !px-5 cursor-pointer;
-    }
-  }
-
-  .call-view {
-    @apply flex sm:flex-row flex-col gap-10 items-center justify-between w-full;
-
-    h3 {
-      @apply text-center text-primary-100 mt-5;
-    }
-
-    .card-interviewer {
-      @apply flex-center flex-col gap-2 p-7 h-[400px] blue-gradient-dark rounded-lg border-2 border-primary-200/50 flex-1 sm:basis-1/2 w-full;
-    }
-
-    .avatar {
-      @apply z-10 flex items-center justify-center blue-gradient rounded-full size-[120px] relative;
-
-      .animate-speak {
-        @apply absolute inline-flex size-5/6 animate-ping rounded-full bg-primary-200 opacity-75;
-      }
-    }
-
-    .card-border {
-      @apply border-gradient p-0.5 rounded-2xl flex-1 sm:basis-1/2 w-full h-[400px] max-md:hidden;
-    }
-
-    .card-content {
-      @apply flex flex-col gap-2 justify-center items-center p-7 dark-gradient rounded-2xl min-h-full;
-    }
-  }
-
-  .transcript-border {
-    @apply border-gradient p-0.5 rounded-2xl w-full;
-
-    .transcript {
-      @apply dark-gradient rounded-2xl  min-h-12 px-5 py-3 flex items-center justify-center;
-
-      p {
-        @apply text-lg text-center text-white;
+        & > h3 {
+          @apply text-center;
+        }
       }
     }
   }
 
-  .section-feedback {
-    @apply flex flex-col gap-8 max-w-5xl mx-auto max-sm:px-4 text-lg leading-7;
+  .root-layout {
+    @apply space-y-12 mx-auto max-w-7xl my-12 px-16 max-sm:px-4 max-sm:my-8;
+
+    & > main {
+      @apply space-y-8 min-h-screen;
+    }
+  }
+
+  .hero-section {
+    @apply flex flex-row blue-gradient-dark rounded-3xl px-16 py-6 items-center justify-between max-sm:px-4;
+
+    div {
+      @apply space-y-4;
+    }
+  }
+
+  .interview-section {
+    @apply space-y-4;
+
+    ul {
+      @apply grid gap-4 md:grid-cols-2 lg:grid-cols-3;
+    }
+  }
+
+  .feedback-section {
+    @apply space-y-8 max-w-5xl mx-auto max-sm:px-4 text-lg leading-7;
 
     .buttons {
       @apply flex w-full justify-evenly gap-4 max-sm:flex-col max-sm:items-center;
     }
   }
 
-  .auth-layout {
-    @apply flex items-center justify-center mx-auto max-w-7xl min-h-screen max-sm:px-4 max-sm:py-8;
+  .disconnect-btn {
+    @apply inline-block px-7 py-3 text-sm font-bold leading-5 text-white transition-colors duration-150 bg-destructive border border-transparent rounded-full shadow-sm focus:outline-none focus:shadow-2xl active:bg-destructive hover:bg-destructive/20 min-w-28;
   }
 
-  .root-layout {
-    @apply flex mx-auto max-w-7xl flex-col gap-12 my-12 px-16 max-sm:px-4 max-sm:my-8;
+  .upload-btn {
+    @apply flex w-full items-center justify-center gap-1.5 bg-muted rounded-full min-h-12 px-5 cursor-pointer border border-input  overflow-hidden;
   }
 
-  .card-cta {
-    @apply flex flex-row blue-gradient-dark rounded-3xl px-16 py-6 items-center justify-between max-sm:px-4;
+  .interview-card {
+    @apply card space-y-6 p-6 relative overflow-hidden;
+
+    div {
+      @apply flex items-center gap-4;
+
+      span {
+        @apply flex-center gap-2;
+
+        svg {
+          @apply text-foreground size-4;
+        }
+      }
+
+      &:last-child {
+        @apply justify-between;
+      }
+    }
+
+    h3 {
+      @apply text-foreground;
+    }
+
+    .badge {
+      @apply absolute top-4 right-4 text-sm font-semibold capitalize;
+    }
   }
 
-  .interviews-section {
-    @apply flex flex-wrap gap-4 max-lg:flex-col w-full items-stretch;
+  .call-view {
+    @apply grid md:grid-cols-2 gap-4;
+
+    & > div {
+      @apply flex-center flex-col gap-2 p-7 h-[400px] flex-1 sm:basis-1/2 w-full;
+    }
+
+    h3 {
+      @apply text-center mt-5;
+    }
+
+    .avatar {
+      @apply z-10 flex items-center justify-center blue-gradient rounded-full size-[120px] relative;
+
+      .animate-speak {
+        @apply absolute inline-flex size-5/6 animate-ping rounded-full opacity-75;
+      }
+    }
+
+    .interviewer-card {
+      @apply blue-gradient-dark rounded-lg border-2;
+    }
+
+    .user-card {
+      @apply card max-md:hidden;
+    }
   }
 
-  .interview-text {
-    @apply text-lg text-center text-white;
+  .transcript {
+    @apply card min-h-12 px-5 py-3 flex items-center justify-center;
+
+    p {
+      @apply text-lg text-center text-white;
+    }
   }
 
   .progress {
-    @apply h-1.5 text-[5px] font-bold bg-primary-200 rounded-full flex-center;
+    @apply h-1.5 text-[5px] font-bold rounded-full flex-center;
   }
 
   .tech-tooltip {
-    @apply absolute bottom-full mb-1 hidden group-hover:flex px-2 py-1 text-xs text-white bg-gray-700 rounded-md shadow-md;
+    @apply absolute bottom-full mb-1 hidden group-hover:flex px-2 py-1 text-xs text-white bg-muted rounded-md shadow-md;
   }
+}
 
-  .card-interview {
-    @apply dark-gradient rounded-2xl min-h-full flex flex-col p-6 relative overflow-hidden gap-10 justify-between;
-
-    .badge-text {
-      @apply text-sm font-semibold capitalize;
-    }
-  }
+@utility card {
+  @apply dark-gradient rounded-2xl border-2 border-gradient;
 }
 
 @utility dark-gradient {
@@ -320,15 +310,4 @@
 
 @utility animate-fadeIn {
   animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
